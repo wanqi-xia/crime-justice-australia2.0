@@ -1,0 +1,82 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Imprisonment Rate by Age and Gender in Australia (2024)",
+    "fontSize": 20,
+    "anchor": "middle",
+    "subtitle": "Rate per 100,000 population - Population Pyramid Style",
+    "subtitleFontSize": 14
+  },
+  "width": 600,
+  "height": 500,
+  "data": {
+    "url": "../data/imprisonment_rate_pyramid_2024.csv"
+  },
+  "mark": {
+    "type": "bar"
+  },
+  "encoding": {
+    "x": {
+      "field": "Rate",
+      "type": "quantitative",
+      "title": "Imprisonment Rate per 100,000 (Female ← → Male)",
+      "axis": {
+        "labelExpr": "abs(datum.value)",
+        "labelFontSize": 11,
+        "titleFontSize": 13
+      },
+      "scale": {
+        "domain": [-100, 800]
+      }
+    },
+    "y": {
+      "field": "Age_Group",
+      "type": "nominal",
+      "title": "Age Group",
+      "axis": {
+        "labelFontSize": 12,
+        "titleFontSize": 14
+      },
+      "sort": ["18 years", "19 years", "20–24 years", "25–29 years", "30–34 years", 
+              "35–39 years", "40–44 years", "45–49 years", "50–54 years", 
+              "55–59 years", "60–64 years", "65 years and over"]
+    },
+    "color": {
+      "field": "Gender",
+      "type": "nominal",
+      "scale": {
+        "domain": ["Male", "Female"],
+        "range": ["#1e40af", "#64748b"]
+      },
+      "legend": {
+        "orient": "top",
+        "titleFontSize": 14,
+        "labelFontSize": 13
+      }
+    },
+    "tooltip": [
+      {
+        "field": "Age_Group",
+        "type": "nominal",
+        "title": "Age Group"
+      },
+      {
+        "field": "Gender",
+        "type": "nominal",
+        "title": "Gender"
+      },
+      {
+        "field": "Rate",
+        "type": "quantitative",
+        "title": "Rate per 100,000",
+        "format": ".1f",
+        "formatType": "number"
+      }
+    ]
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Violent Crime Imprisonment Trends in Australia (2015-2024)",
+    "fontSize": 20,
+    "anchor": "middle",
+    "subtitle": "Number of people imprisoned for assault, sexual assault, and homicide",
+    "subtitleFontSize": 14
+  },
+  "width": 800,
+  "height": 500,
+  "data": {
+    "url": "../data/violent_crime_imprisonment_2015_2024.csv"
+  },
+  "mark": {
+    "type": "area",
+    "line": {
+      "strokeWidth": 2
+    },
+    "point": {
+      "filled": true,
+      "size": 50
+    },
+    "opacity": 0.7,
+    "interpolate": "monotone"
+  },
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "ordinal",
+      "title": "Year",
+      "axis": {
+        "labelAngle": 0,
+        "labelFontSize": 12,
+        "titleFontSize": 14,
+        "grid": false
+      }
+    },
+    "y": {
+      "field": "Prisoners",
+      "type": "quantitative",
+      "title": "Number of Prisoners",
+      "stack": true,
+      "axis": {
+        "labelFontSize": 12,
+        "titleFontSize": 14,
+        "format": ","
+      }
+    },
+    "color": {
+      "field": "Crime_Type",
+      "type": "nominal",
+      "title": "Crime Type",
+      "scale": {
+        "domain": ["Homicide", "Sexual Assault", "Assault"],
+        "range": ["#34495e", "#3498db", "#e74c3c"]
+      },
+      "legend": {
+        "titleFontSize": 14,
+        "labelFontSize": 13,
+        "orient": "top-right",
+        "direction": "vertical"
+      }
+    },
+    "order": {
+      "field": "Crime_Type",
+      "type": "nominal",
+      "sort": ["Assault", "Sexual Assault", "Homicide"]
+    },
+    "tooltip": [
+      {
+        "field": "Year",
+        "type": "ordinal",
+        "title": "Year"
+      },
+      {
+        "field": "Crime_Type",
+        "type": "nominal",
+        "title": "Crime Type"
+      },
+      {
+        "field": "Prisoners",
+        "type": "quantitative",
+        "title": "Number of Prisoners",
+        "format": ","
+      }
+    ]
+  }
+}

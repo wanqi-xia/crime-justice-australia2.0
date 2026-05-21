@@ -1,0 +1,124 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Change in Imprisonment Rates by Indigenous Status, 2015-2024",
+    "fontSize": 20,
+    "anchor": "middle",
+    "subtitle": "Indexed to 100 in 2015 - Indigenous rate increased 35%, while Non-Indigenous decreased 6%",
+    "subtitleFontSize": 14
+  },
+  "width": 800,
+  "height": 500,
+  "data": {
+    "url": "../data/indigenous_indexed_2015_2024.csv"
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "strokeWidth": 4,
+        "point": {
+          "filled": true,
+          "size": 120
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "Year",
+          "type": "ordinal",
+          "title": "Year",
+          "axis": {
+            "labelAngle": 0,
+            "labelFontSize": 13,
+            "titleFontSize": 14
+          }
+        },
+        "y": {
+          "field": "Index",
+          "type": "quantitative",
+          "title": "Index (2015 = 100)",
+          "axis": {
+            "labelFontSize": 12,
+            "titleFontSize": 14
+          },
+          "scale": {
+            "domain": [85, 140]
+          }
+        },
+        "color": {
+          "field": "Status",
+          "type": "nominal",
+          "title": "Indigenous Status",
+          "scale": {
+            "domain": ["Indigenous", "Non-Indigenous"],
+            "range": ["#c0392b", "#2980b9"]
+          },
+          "legend": {
+            "titleFontSize": 14,
+            "labelFontSize": 13,
+            "orient": "top",
+            "direction": "horizontal"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "Year",
+            "type": "ordinal",
+            "title": "Year"
+          },
+          {
+            "field": "Status",
+            "type": "nominal",
+            "title": "Status"
+          },
+          {
+            "field": "Index",
+            "type": "quantitative",
+            "title": "Index (2015=100)",
+            "format": ".1f"
+          },
+          {
+            "field": "Original_Rate",
+            "type": "quantitative",
+            "title": "Actual Rate (%)",
+            "format": ".3f"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "rule",
+        "strokeDash": [5, 5],
+        "color": "#95a5a6",
+        "strokeWidth": 2
+      },
+      "encoding": {
+        "y": {
+          "datum": 100
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": -50,
+        "dy": -5,
+        "fontSize": 11,
+        "color": "#7f8c8d"
+      },
+      "encoding": {
+        "x": {
+          "datum": "2015"
+        },
+        "y": {
+          "datum": 100
+        },
+        "text": {
+          "value": "Baseline (2015 = 100)"
+        }
+      }
+    }
+  ]
+}

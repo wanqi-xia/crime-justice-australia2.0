@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crime and Justice in Australia - Complete Data Analysis</title>
+
+  <!-- Vega -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-primary: #fafaf9;
+      --bg-secondary: #f5f3f0;
+      --panel-bg: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --accent-blue: #3b82f6;
+      --accent-navy: #1e40af;
+      --accent-warm: #f59e0b;
+      --accent-teal: #14b8a6;
+      --border-light: #e7e5e4;
+      --border-medium: #d1d5db;
+      --font-display: "DM Sans", system-ui, sans-serif;
+      --font-body: "Inter", -apple-system, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .hero {
+      padding: 80px 7vw 70px;
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+      color: #ffffff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #fbbf24;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.95;
+    }
+
+    h1 {
+      max-width: 960px;
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(36px, 5.5vw, 68px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero p:not(.eyebrow) {
+      max-width: 720px;
+      margin: 20px 0 0;
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 17px;
+      line-height: 1.65;
+      font-weight: 400;
+    }
+
+    .stat-row {
+      margin: 36px 0 0;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .stat-block {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 20px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .stat-number {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 42px;
+      line-height: 1;
+      color: #ffffff;
+    }
+
+    .stat-label {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    main {
+      padding: 0 0 60px;
+    }
+
+    section {
+      padding: 60px 6vw 40px;
+      border-top: 1px solid var(--border-light);
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    section:nth-child(even) {
+      background: var(--bg-secondary);
+    }
+
+    .section-title {
+      max-width: 1240px;
+      margin: 0 auto 32px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .section-title span {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      background: linear-gradient(135deg, var(--accent-navy) 0%, var(--accent-blue) 100%);
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+    }
+
+    h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 32px;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+    }
+
+    .section-title p {
+      margin: 8px 0 0;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .grid {
+      max-width: 1240px;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .grid.two {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .grid.full {
+      grid-template-columns: 1fr;
+    }
+
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02);
+      transition: box-shadow 0.3s ease;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .panel:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.04);
+    }
+
+    h3 {
+      margin: 0 0 16px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+    }
+
+    .story-copy {
+      border-left: 3px solid var(--accent-blue);
+      margin: 0 0 20px;
+      max-width: 70ch;
+      padding: 8px 0 8px 18px;
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.03) 0%, transparent 100%);
+    }
+
+    .story-copy p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.7;
+      margin: 6px 0;
+    }
+
+    .story-copy strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .takeaway {
+      max-width: 1240px;
+      margin: 24px auto 0;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 1px solid #bfdbfe;
+      border-left: 4px solid var(--accent-blue);
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.08);
+    }
+
+    .takeaway strong {
+      display: block;
+      margin-bottom: 6px;
+      font-family: var(--font-display);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-navy);
+      font-weight: 700;
+    }
+
+    .takeaway p {
+      margin: 0;
+      max-width: 85ch;
+      color: #1e3a8a;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.7;
+    }
+
+    .chart-caption {
+      margin: 16px 0 0;
+      padding: 12px 0;
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+      font-style: italic;
+      border-top: 1px solid var(--border-light);
+    }
+
+    footer {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      color: #cbd5e1;
+      padding: 56px 6vw 64px;
+      margin-top: 48px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    footer p {
+      max-width: 1240px;
+      margin: 0 auto;
+      font-size: 14px;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    footer p strong {
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+
+    footer p+p {
+      margin-top: 12px;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 980px) {
+      .grid.two {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-row {
+        gap: 16px;
+      }
+
+      .stat-block {
+        flex: 1 1 auto;
+        min-width: 140px;
+      }
+    }
+
+    .vega-embed {
+      width: 100% !important;
+    }
+
+    .vega-embed summary {
+      display: none;
+    }
+
+    .vega-embed canvas {
+      width: 100% !important;
+      height: auto !important;
+    }
+
+    /* 确保图表容器有合适的高度 */
+    #chart1,
+    #chart2,
+    #chart3,
+    #chart4 {
+      min-height: 320px;
+      max-height: 400px;
+      width: 100%;
+    }
+
+    /* Figure 5 - Lollipop 图 - 调整后更紧凑 */
+    #chart5 {
+      min-height: 200px;
+      max-height: 250px;
+      width: 100%;
+    }
+
+    /* 地图保持合适尺寸 */
+    #chart6 {
+      min-height: 420px;
+      max-height: 500px;
+      width: 100%;
+    }
+
+    /* Figure 7 - 人口金字塔 - 调整后 */
+    #chart7 {
+      min-height: 240px;
+      max-height: 300px;
+      width: 100%;
+    }
+
+    /* Figure 8 - Indigenous imprisonment - 调整后 */
+    #chart8 {
+      min-height: 280px;
+      max-height: 350px;
+      width: 100%;
+    }
+
+    /* Figure 9, 10 保持原样 */
+    #chart9,
+    #chart10 {
+      min-height: 300px;
+      max-height: 380px;
+      width: 100%;
+    }
+
+    /* Interactive Map with Flip Card Styles */
+    .interactive-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .map-container {
+      min-height: 500px;
+    }
+
+    .card-container {
+      position: sticky;
+      top: 20px;
+    }
+
+    /* Flip Card Styles */
+    .book {
+      position: relative;
+      border-radius: 12px;
+      width: 100%;
+      height: 480px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.04);
+      transform: preserve-3d;
+      perspective: 2000px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+    }
+
+    .cover {
+      top: 0;
+      position: absolute;
+      background: linear-gradient(135deg, var(--accent-navy) 0%, var(--accent-blue) 100%);
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: left;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      color: white;
+      z-index: 2;
+    }
+
+    .book.flipped .cover {
+      transform: rotateY(-155deg);
+    }
+
+    .cover-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      margin: 0 0 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .cover-subtitle {
+      font-size: 13px;
+      opacity: 0.85;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+    }
+
+    .book-content {
+      padding: 32px 28px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .state-name {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent-navy);
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .stat-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-label-card {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-navy);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--accent-navy);
+      line-height: 1;
+    }
+
+    .stat-unit {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .insight-box {
+      background: #f8fafc;
+      border-left: 3px solid var(--accent-blue);
+      padding: 16px;
+      border-radius: 6px;
+      margin-top: auto;
+    }
+
+    .insight-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-navy);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .insight-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .default-message {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 15px;
+      padding: 40px 20px;
+    }
+
+    .default-message-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .instruction {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 1px solid #fcd34d;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .instruction-icon {
+      font-size: 20px;
+    }
+
+    .instruction-text {
+      font-size: 13px;
+      color: #78350f;
+      margin: 0;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 980px) {
+      .interactive-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .card-container {
+        position: relative;
+        top: 0;
+      }
+
+      .book {
+        height: 420px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">Data Analysis • Australia 2024</p>
+      <h1>Crime and Justice in Australia</h1>
+      <p>A comprehensive data investigation into crime trends, violence patterns, and social justice across Australia
+        from 2009 to 2024.</p>
+
+      <div class="stat-row">
+        <div class="stat-block">
+          <div class="stat-number">1.03M</div>
+          <div class="stat-label">Total Victims</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number">+107%</div>
+          <div class="stat-label">Sexual Assault Rise</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number">14.2×</div>
+          <div class="stat-label">Indigenous Gap</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- PART 1: Personal Violence -->
+    <section>
+      <div class="section-title">
+        <span>1</span>
+        <div>
+          <h2>Personal Violence Trends</h2>
+          <p>How victimization patterns have evolved across Australia (2009-2024)</p>
+        </div>
+      </div>
+
+      <div class="grid two">
+        <div class="panel">
+          <h3>Figure 1: Violence Over Time</h3>
+          <div class="story-copy">
+            <p><strong>Physical assault decreased 31%</strong> while sexual assault more than doubled, revealing
+              shifting patterns in personal violence.</p>
+          </div>
+          <div id="chart1"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Figure 2: Crime Distribution (2024)</h3>
+          <div class="story-copy">
+            <p><strong>Threatened assault dominates</strong>, accounting for nearly half of all reported crime victims.
+            </p>
+          </div>
+          <div id="chart2"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PART 2: Imprisonment Trends -->
+    <section>
+      <div class="section-title">
+        <span>2</span>
+        <div>
+          <h2>Imprisonment and Crime Patterns</h2>
+          <p>Analysis of violent crime and property crime imprisonment trends</p>
+        </div>
+      </div>
+
+      <div class="grid two">
+        <div class="panel">
+          <h3>Figure 3: Violent Crime Imprisonment</h3>
+          <div class="story-copy">
+            <p><strong>Assault dominates violent crime</strong> in Australia's prison system, with steady increases over
+              the past decade.</p>
+          </div>
+          <div id="chart3"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Figure 4: Property Crime Trends</h3>
+          <div class="story-copy">
+            <p><strong>Theft shows declining imprisonment rates</strong> while robbery remains relatively stable.</p>
+          </div>
+          <div id="chart4"></div>
+        </div>
+      </div>
+
+      <div class="grid full" style="margin-top: 24px;">
+        <div class="panel">
+          <h3>Figure 5: Crime Imprisonment Comparison (2024)</h3>
+          <div class="story-copy">
+            <p><strong>Assault leads all categories</strong> with over 12,000 prisoners, followed by sexual assault and
+              unlawful entry.</p>
+          </div>
+          <div id="chart5"></div>
+          <p class="chart-caption">Violent crimes, especially assault, accounted for the largest share of imprisonment
+            in Australia in 2024, highlighting the continuing impact of violent offending on the justice system.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PART 3: Spatial Dimension -->
+    <section>
+      <div class="section-title">
+        <span>3</span>
+        <div>
+          <h2>Geographic Patterns</h2>
+          <p>Regional disparities in family violence and security measures</p>
+        </div>
+      </div>
+
+      <div class="instruction">
+        <div class="instruction-icon">👆</div>
+        <p class="instruction-text">Click on any state in the map to explore detailed FDV statistics in the interactive
+          card</p>
+      </div>
+
+      <div class="grid full">
+        <div class="panel">
+          <h3>Figure 6: FDV Offender Rate by State</h3>
+          <div class="story-copy">
+            <p><strong>Northern Territory records rates 11× the national average</strong>, highlighting a severe
+              regional crisis in family and domestic violence.</p>
+          </div>
+
+          <div class="interactive-wrapper">
+            <div class="map-container">
+              <div id="chart6"></div>
+            </div>
+
+            <div class="card-container">
+              <div class="book" id="flipCard">
+                <div class="cover" id="cardCover">
+                  <div class="cover-icon">🗺️</div>
+                  <h3 class="cover-title">Explore State Data</h3>
+                  <p class="cover-subtitle">Click a state on the map</p>
+                </div>
+                <div class="book-content" id="cardContent">
+                  <div class="default-message">
+                    <div class="default-message-icon">📊</div>
+                    <p>Select a state from the map to view detailed FDV statistics</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="takeaway">
+        <strong>Key Finding</strong>
+        <p>Northern Territory records 2,124 FDV offenders per 100,000 people — more than 10 times higher than the
+          Australian Capital Territory (196) and nearly 5 times the next highest state.</p>
+      </div>
+    </section>
+
+    <!-- PART 4: Demographics -->
+    <section>
+      <div class="section-title">
+        <span>4</span>
+        <div>
+          <h2>Demographic Analysis</h2>
+          <p>Age and gender patterns in imprisonment rates</p>
+        </div>
+      </div>
+
+      <div class="grid full">
+        <div class="panel">
+          <h3>Figure 7: Imprisonment Rate by Age & Gender (2024)</h3>
+          <div class="story-copy">
+            <p><strong>Males aged 25-34 show the highest imprisonment rates</strong>, with stark gender disparities
+              across all age groups.</p>
+          </div>
+          <div id="chart7"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PART 5: Indigenous & Social Issues -->
+    <section>
+      <div class="section-title">
+        <span>5</span>
+        <div>
+          <h2>Indigenous Incarceration & Social Justice</h2>
+          <p>Examining systemic disparities and outcomes</p>
+        </div>
+      </div>
+
+      <div class="grid full">
+        <div class="panel">
+          <h3>Figure 8: Indigenous vs Non-Indigenous Imprisonment</h3>
+          <div class="story-copy">
+            <p><strong>The gap continues to widen:</strong> Indigenous imprisonment rates surged 35% since 2015, while
+              non-Indigenous rates fell 6%.</p>
+          </div>
+          <div id="chart8"></div>
+        </div>
+      </div>
+
+      <div class="grid two" style="margin-top: 24px;">
+        <div class="panel">
+          <h3>Figure 9: Deaths in Custody (2020-2024)</h3>
+          <div class="story-copy">
+            <p><strong>Male deaths in custody</strong> significantly outnumber female deaths across all years.</p>
+          </div>
+          <div id="chart9"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Figure 10: Home Protection Methods (2024)</h3>
+          <div class="story-copy">
+            <p><strong>Deadlocks and security screens</strong> are the most common home protection measures across
+              Australia.</p>
+          </div>
+          <div id="chart10"></div>
+        </div>
+      </div>
+
+      <div class="takeaway">
+        <strong>Systemic Issue</strong>
+        <p>Indigenous Australians are 14 times more likely to be imprisoned than non-Indigenous Australians, despite
+          making up only 3.8% of the population. This over-representation has increased over the past decade.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>Data Sources:</strong> Australian Bureau of Statistics • Australian Institute of Criminology • Australian
+      Institute of Health and Welfare</p>
+    <p>Data visualization and analysis created May 2024</p>
+  </footer>
+
+  <script>
+    // Base URL for GitHub raw content
+    const baseUrl = 'https://raw.githubusercontent.com/wanqi-xia/FIT2179/main';
+
+    // Chart 1: Personal Violence Trends
+    vegaEmbed('#chart1', `${baseUrl}/js/1.Trends_of_people_injury.vg.json`, {
+      actions: false
+    }).catch(console.error);
+
+    // Chart 2: Crime Victims Pie/Donut
+    vegaEmbed('#chart2', `${baseUrl}/js/2.Crime_comparison_2024.vg.json`, {
+      actions: false
+    }).catch(console.error);
+
+    // Chart 3: Violent Crime Imprisonment
+    vegaEmbed('#chart3', `${baseUrl}/js/3.violent_crime_imprisonment_area.vg.json`, {
+      actions: false
+    }).catch(console.error);
+
+    // Chart 4: Property Crime Line
+    vegaEmbed('#chart4', `${baseUrl}/js/4.property_crime_imprisonment_line.vg.json`, {
+      actions: false
+    }).catch(console.error);
+
+    // Chart 5: Crime Lollipop
+    vegaEmbed('#chart5', `${baseUrl}/js/5.crime_imprisonment_2024_lollipo.vg.json`, {
+      actions: false
+    }).catch(console.error);
+
+    // Chart 6: FDV Map with Interactive Card
+    const mapSpec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "description": "Family and Domestic Violence Offender Rate Map",
+      "width": "container",
+      "height": 450,
+      "padding": { "left": 20, "right": 20, "top": 20, "bottom": 80 },
+      "config": {
+        "view": {
+          "stroke": null
+        },
+        "font": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        "legend": {
+          "labelColor": "#374151",
+          "titleColor": "#1F2937",
+          "labelFontSize": 11,
+          "titleFontSize": 12,
+          "labelFont": "Inter, system-ui, sans-serif",
+          "titleFont": "Inter, system-ui, sans-serif",
+          "orient": "bottom",
+          "titleFontWeight": 500,
+          "gradientLength": 200,
+          "gradientThickness": 12,
+          "offset": 20,
+          "direction": "horizontal"
+        }
+      },
+      "projection": {
+        "type": "mercator",
+        "center": [133, -27],
+        "scale": 800
+      },
+      "layer": [
+        {
+          "data": {
+            "url": "https://raw.githubusercontent.com/wanqi-xia/australia-security-map/refs/heads/main/au-states-with-names.json",
+            "format": {
+              "type": "topojson",
+              "feature": "austates"
+            }
+          },
+          "transform": [
+            {
+              "lookup": "properties.STATE_NAME",
+              "from": {
+                "data": {
+                  "url": "https://raw.githubusercontent.com/wanqi-xia/australia-security-map/refs/heads/main/fdv_offender_rate.csv"
+                },
+                "key": "State",
+                "fields": ["Rate"]
+              },
+              "default": null
+            }
+          ],
+          "selection": {
+            "stateClick": {
+              "type": "single",
+              "fields": ["properties.STATE_NAME"],
+              "on": "click"
+            }
+          },
+          "mark": {
+            "type": "geoshape",
+            "stroke": "#ffffff",
+            "strokeWidth": 2.5,
+            "cursor": "pointer"
+          },
+          "encoding": {
+            "color": {
+              "condition": {
+                "test": "datum.Rate !== null && datum.Rate > 0",
+                "field": "Rate",
+                "type": "quantitative",
+                "scale": {
+                  "type": "threshold",
+                  "domain": [250, 400, 550, 1000],
+                  "range": ["#DBEAFE", "#93C5FD", "#60A5FA", "#3B82F6", "#DC2626"]
+                },
+                "legend": {
+                  "title": "FDV Offender Rate (per 100,000)",
+                  "format": ","
+                }
+              },
+              "value": "#F3F4F6"
+            },
+            "strokeWidth": {
+              "condition": {
+                "selection": "stateClick",
+                "value": 4
+              },
+              "value": 2.5
+            },
+            "opacity": {
+              "condition": [
+                {
+                  "selection": "stateClick",
+                  "value": 1
+                },
+                {
+                  "test": "datum.Rate !== null",
+                  "value": 0.85
+                }
+              ],
+              "value": 0.3
+            }
+          }
+        }
+      ]
+    };
+
+    // State insights data
+    const stateData = {
+      "New South Wales": {
+        insight: "NSW shows a moderate FDV offender rate, reflecting urban-regional balance in a diverse population."
+      },
+      "Victoria": {
+        insight: "Victoria maintains relatively lower rates compared to national average, with strong support services."
+      },
+      "Queensland": {
+        insight: "Queensland's rate reflects its large regional population and geographic challenges in service delivery."
+      },
+      "South Australia": {
+        insight: "SA demonstrates stable rates with ongoing focus on prevention and intervention programs."
+      },
+      "Western Australia": {
+        insight: "WA shows elevated rates in remote areas, highlighting challenges in vast geographic coverage."
+      },
+      "Tasmania": {
+        insight: "Tasmania's smaller population requires tailored approaches to family violence prevention."
+      },
+      "Northern Territory": {
+        insight: "NT records the highest rates nationally, indicating a severe regional crisis requiring urgent attention and systemic reform."
+      },
+      "Australian Capital Territory": {
+        insight: "ACT shows the lowest rates nationally, benefiting from concentrated urban services and higher socioeconomic indicators."
+      }
+    };
+
+    vegaEmbed('#chart6', mapSpec, { actions: false }).then(result => {
+      const view = result.view;
+
+      // Listen for click events
+      view.addEventListener('click', (event, item) => {
+        if (item && item.datum && item.datum.properties) {
+          const stateName = item.datum.properties.STATE_NAME;
+          const rate = item.datum.Rate;
+
+          if (rate !== null && rate > 0) {
+            updateCard(stateName, rate);
+          }
+        }
+      });
+    }).catch(console.error);
+
+    function updateCard(stateName, rate) {
+      const flipCard = document.getElementById('flipCard');
+      const cardContent = document.getElementById('cardContent');
+
+      // Flip the card
+      flipCard.classList.add('flipped');
+
+      // Get insight
+      const insight = stateData[stateName]?.insight || "Detailed analysis available upon further data integration.";
+
+      // Update content
+      cardContent.innerHTML = `
+            <h2 class="state-name">${stateName}</h2>
+            
+            <div class="stat-box">
+              <div class="stat-label-card">FDV Offender Rate</div>
+              <div class="stat-value">${rate.toLocaleString()}</div>
+              <div class="stat-unit">per 100,000 population</div>
+            </div>
+            
+            <div class="insight-box">
+              <div class="insight-label">Key Insight</div>
+              <p class="insight-text">${insight}</p>
+            </div>
+          `;
+    }
+
+    // Click cover to flip back
+    document.getElementById('cardCover').addEventListener('click', () => {
+      document.getElementById('flipCard').classList.remove('flipped');
+    });
+
+    // Chart 7: Imprisonment Pyramid
+    vegaEmbed('#chart7', `${baseUrl}/js/7.imprisonment_pyramid_2024.vg.json`, {
+      actions: false
+    }).catch(console.error);
+
+    // Chart 8: Indigenous Imprisonment Line
+    vegaEmbed('#chart8', `${baseUrl}/js/8.indigenous_imprisonment_line.vg.json`, {
+      actions: false
+    }).catch(console.error);
+
+    // Chart 9: Deaths in Custody
+    vegaEmbed('#chart9', `${baseUrl}/js/9.deaths_in_custody_stacked.vg.json`, {
+      actions: false
+    }).catch(console.error);
+
+    // Chart 10: Home Protection
+    vegaEmbed('#chart10', `${baseUrl}/js/10.home_protection.vg.json`, {
+      actions: false
+    }).catch(console.error);
+  </script>
+</body>
+
+</html>

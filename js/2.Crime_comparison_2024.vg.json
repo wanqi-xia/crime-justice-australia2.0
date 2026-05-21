@@ -1,0 +1,150 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Modern radial donut chart for crime victims distribution",
+  "width": "container",
+  "height": 400,
+  "padding": {"left": 20, "right": 20, "top": 30, "bottom": 30},
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "font": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    "legend": {
+      "disable": false,
+      "labelColor": "#374151",
+      "titleColor": "#1F2937",
+      "labelFontSize": 12,
+      "titleFontSize": 13,
+      "symbolSize": 140,
+      "symbolType": "circle",
+      "symbolStrokeWidth": 0,
+      "labelFont": "Inter, system-ui, sans-serif",
+      "titleFont": "Inter, system-ui, sans-serif",
+      "orient": "right",
+      "titleFontWeight": 500,
+      "offset": 30,
+      "padding": 15,
+      "labelLimit": 180,
+      "rowPadding": 8,
+      "symbolOffset": 8
+    }
+  },
+  "data": {
+    "url": "../data/crime_types_2024_pie.csv"
+  },
+  "transform": [
+    {
+      "calculate": "{'Threatened assault': 'Threatened Assault', 'physical assault': 'Physical Assault', 'sexual assault': 'Sexual Assault', 'Robbery': 'Robbery'}[datum.Crime_Type]",
+      "as": "Crime_Type_Clean"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "arc",
+        "innerRadius": 85,
+        "outerRadius": 145,
+        "stroke": "#ffffff",
+        "strokeWidth": 4,
+        "opacity": 0.9,
+        "cornerRadius": 3
+      },
+      "encoding": {
+        "theta": {
+          "field": "Victims",
+          "type": "quantitative",
+          "stack": true
+        },
+        "color": {
+          "field": "Crime_Type_Clean",
+          "type": "nominal",
+          "title": "Crime Type",
+          "scale": {
+            "domain": ["Threatened Assault", "Physical Assault", "Sexual Assault", "Robbery"],
+            "range": ["#60A5FA", "#FB7185", "#C084FC", "#FBBF24"]
+          }
+        },
+        "tooltip": [
+          {
+            "field": "Crime_Type_Clean",
+            "type": "nominal",
+            "title": "Crime Type"
+          },
+          {
+            "field": "Victims",
+            "type": "quantitative",
+            "title": "Victims (thousands)",
+            "format": ".1f"
+          },
+          {
+            "field": "Percentage",
+            "type": "quantitative",
+            "title": "Percentage",
+            "format": ".1f"
+          }
+        ],
+        "order": {
+          "field": "Victims",
+          "type": "quantitative",
+          "sort": "descending"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "radius": 165,
+        "fontSize": 11,
+        "fontWeight": 600,
+        "color": "#1F2937"
+      },
+      "encoding": {
+        "theta": {
+          "field": "Victims",
+          "type": "quantitative",
+          "stack": true
+        },
+        "text": {
+          "field": "Percentage",
+          "type": "quantitative",
+          "format": ".1f"
+        },
+        "order": {
+          "field": "Victims",
+          "type": "quantitative",
+          "sort": "descending"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "radius": 0,
+        "fontSize": 28,
+        "fontWeight": 700,
+        "color": "#1F2937",
+        "dy": -10
+      },
+      "encoding": {
+        "text": {
+          "value": "1,027K"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "radius": 0,
+        "fontSize": 13,
+        "fontWeight": 500,
+        "color": "#6B7280",
+        "dy": 15
+      },
+      "encoding": {
+        "text": {
+          "value": "Total Victims"
+        }
+      }
+    }
+  ]
+}

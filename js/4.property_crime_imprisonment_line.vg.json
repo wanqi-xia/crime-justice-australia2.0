@@ -1,0 +1,122 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Change in Property Crime Imprisonment (2015 → 2024)",
+    "fontSize": 20,
+    "anchor": "middle",
+    "subtitle": "Robbery/Extortion dropped 21%, Unlawful Entry dropped 7%, while Theft increased 3%",
+    "subtitleFontSize": 14
+  },
+  "width": 600,
+  "height": 500,
+  "data": {
+    "url": "../data/property_crime_imprisonment_2015_2024.csv"
+  },
+  "transform": [
+    {
+      "filter": "datum.Year == 2015 || datum.Year == 2024"
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "ordinal",
+      "title": null,
+      "axis": {
+        "labelAngle": 0,
+        "labelFontSize": 16,
+        "labelFontWeight": "bold",
+        "domain": false,
+        "ticks": false
+      },
+      "scale": {
+        "padding": 0.5
+      }
+    },
+    "y": {
+      "field": "Prisoners",
+      "type": "quantitative",
+      "title": "Number of Prisoners",
+      "axis": {
+        "labelFontSize": 12,
+        "titleFontSize": 14
+      }
+    },
+    "color": {
+      "field": "Crime_Type",
+      "type": "nominal",
+      "scale": {
+        "domain": ["Theft", "Robbery or Extortion", "Unlawful Entry"],
+        "range": ["#e67e22", "#c0392b", "#2980b9"]
+      },
+      "legend": {
+        "title": "Crime Type",
+        "titleFontSize": 14,
+        "labelFontSize": 13,
+        "orient": "top"
+      }
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "strokeWidth": 3
+      },
+      "encoding": {
+        "detail": {
+          "field": "Crime_Type",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 200
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -10,
+        "fontSize": 12,
+        "fontWeight": "bold"
+      },
+      "transform": [
+        {
+          "filter": "datum.Year == 2015"
+        }
+      ],
+      "encoding": {
+        "text": {
+          "field": "Crime_Type",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 10,
+        "fontSize": 12,
+        "fontWeight": "bold"
+      },
+      "transform": [
+        {
+          "filter": "datum.Year == 2024"
+        }
+      ],
+      "encoding": {
+        "text": {
+          "field": "Prisoners",
+          "type": "quantitative",
+          "format": ","
+        }
+      }
+    }
+  ]
+}

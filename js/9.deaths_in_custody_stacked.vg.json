@@ -1,0 +1,83 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Deaths in Custody in Australia by Sex (2020-2024)",
+    "fontSize": 20,
+    "anchor": "middle",
+    "subtitle": "Male deaths remain much higher than female deaths across all years",
+    "subtitleFontSize": 14
+  },
+  "width": 650,
+  "height": 500,
+  "data": {
+    "url": "../data/deaths_in_custody_2020_2024.csv"
+  },
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "ordinal",
+      "title": "Year",
+      "axis": {
+        "labelAngle": 0,
+        "labelFontSize": 13,
+        "titleFontSize": 14
+      }
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "bar",
+        "width": 40
+      },
+      "encoding": {
+        "y": {
+          "field": "Deaths",
+          "type": "quantitative",
+          "title": "Number of Deaths",
+          "axis": {
+            "labelFontSize": 12,
+            "titleFontSize": 14
+          }
+        },
+        "xOffset": {
+          "field": "Sex",
+          "type": "nominal"
+        },
+        "color": {
+          "field": "Sex",
+          "type": "nominal",
+          "title": "Sex",
+          "scale": {
+            "domain": ["Male", "Female"],
+            "range": ["#3498db", "#e74c3c"]
+          },
+          "legend": {
+            "titleFontSize": 14,
+            "labelFontSize": 13,
+            "orient": "top",
+            "direction": "horizontal",
+            "titleAnchor": "middle"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "Year",
+            "type": "ordinal",
+            "title": "Year"
+          },
+          {
+            "field": "Sex",
+            "type": "nominal",
+            "title": "Sex"
+          },
+          {
+            "field": "Deaths",
+            "type": "quantitative",
+            "title": "Deaths"
+          }
+        ]
+      }
+    }
+  ]
+}

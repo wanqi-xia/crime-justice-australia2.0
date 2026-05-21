@@ -1,0 +1,104 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Home Protection Methods Used in Australia (2024)",
+    "fontSize": 20,
+    "anchor": "middle",
+    "subtitle": "Percentage of households using each security measure",
+    "subtitleFontSize": 14
+  },
+  "width": 700,
+  "height": 400,
+  "data": {
+    "url": "../data/home_protection_methods_2024.csv"
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "bar",
+        "tooltip": true
+      },
+      "encoding": {
+        "y": {
+          "field": "Method",
+          "type": "nominal",
+          "title": null,
+          "sort": "-x",
+          "axis": {
+            "labelFontSize": 13,
+            "labelPadding": 10,
+            "labelLimit": 250
+          }
+        },
+        "x": {
+          "field": "Percentage",
+          "type": "quantitative",
+          "title": "Percentage of Households (%)",
+          "axis": {
+            "labelFontSize": 12,
+            "titleFontSize": 14
+          },
+          "scale": {
+            "domain": [0, 65]
+          }
+        },
+        "color": {
+          "field": "Category",
+          "type": "nominal",
+          "scale": {
+            "domain": ["Top 2", "Others"],
+            "range": ["#2980b9", "#bdc3c7"]
+          },
+          "legend": null
+        },
+        "tooltip": [
+          {
+            "field": "Method",
+            "type": "nominal",
+            "title": "Protection Method"
+          },
+          {
+            "field": "Percentage",
+            "type": "quantitative",
+            "title": "Usage Rate (%)",
+            "format": ".2f"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 5,
+        "fontSize": 13,
+        "fontWeight": "bold"
+      },
+      "encoding": {
+        "y": {
+          "field": "Method",
+          "type": "nominal",
+          "sort": "-x"
+        },
+        "x": {
+          "field": "Percentage",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "Percentage",
+          "type": "quantitative",
+          "format": ".2f"
+        },
+        "color": {
+          "field": "Category",
+          "type": "nominal",
+          "scale": {
+            "domain": ["Top 2", "Others"],
+            "range": ["#2980b9", "#7f8c8d"]
+          },
+          "legend": null
+        }
+      }
+    }
+  ]
+}
