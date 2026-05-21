@@ -1,0 +1,110 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Personal violence trends in Australia (2009-2024) - Modern streamgraph design",
+  "width": "container",
+  "height": 380,
+  "padding": {"left": 15, "right": 15, "top": 25, "bottom": 15},
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "font": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    "axis": {
+      "grid": true,
+      "gridColor": "#E5E7EB",
+      "gridOpacity": 0.4,
+      "gridDash": [2, 2],
+      "domain": false,
+      "tickColor": "#9CA3AF",
+      "tickSize": 0,
+      "labelColor": "#6B7280",
+      "titleColor": "#374151",
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "labelFont": "Inter, system-ui, sans-serif",
+      "titleFont": "Inter, system-ui, sans-serif",
+      "titleFontWeight": 500,
+      "labelPadding": 8,
+      "titlePadding": 12
+    },
+    "legend": {
+      "labelColor": "#374151",
+      "titleColor": "#1F2937",
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "symbolSize": 120,
+      "symbolType": "circle",
+      "symbolStrokeWidth": 0,
+      "labelFont": "Inter, system-ui, sans-serif",
+      "titleFont": "Inter, system-ui, sans-serif",
+      "orient": "top",
+      "direction": "horizontal",
+      "titleFontWeight": 500,
+      "offset": 15,
+      "padding": 10,
+      "labelLimit": 150,
+      "columnPadding": 20
+    }
+  },
+  "data": {
+    "url": "../data/australia_assault_trends_2009_2024.csv"
+  },
+  "mark": {
+    "type": "area",
+    "interpolate": "monotone",
+    "opacity": 0.8,
+    "line": {
+      "strokeWidth": 0.5,
+      "opacity": 0.3
+    }
+  },
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "ordinal",
+      "title": "Year",
+      "axis": {
+        "labelAngle": 0,
+        "labelAlign": "center",
+        "labelBaseline": "top"
+      }
+    },
+    "y": {
+      "field": "Victims",
+      "type": "quantitative",
+      "title": "Number of Victims (thousands)",
+      "stack": "center",
+      "axis": {
+        "format": ",.0f",
+        "tickCount": 8
+      }
+    },
+    "color": {
+      "field": "Assault_Type",
+      "type": "nominal",
+      "title": "Type of Assault",
+      "scale": {
+        "domain": ["Physical Assault", "Sexual Assault", "Threatened Assault", "Robbery"],
+        "range": ["#FB7185", "#C084FC", "#60A5FA", "#FBBF24"]
+      }
+    },
+    "tooltip": [
+      {
+        "field": "Year",
+        "type": "ordinal",
+        "title": "Year"
+      },
+      {
+        "field": "Assault_Type",
+        "type": "nominal",
+        "title": "Type"
+      },
+      {
+        "field": "Victims",
+        "type": "quantitative",
+        "title": "Victims (thousands)",
+        "format": ".1f"
+      }
+    ]
+  }
+}

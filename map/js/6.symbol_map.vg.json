@@ -1,0 +1,99 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Family and Domestic Violence Offender Rate Map",
+  "width": "container",
+  "height": 450,
+  "padding": {"left": 15, "right": 15, "top": 25, "bottom": 15},
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "font": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    "legend": {
+      "labelColor": "#374151",
+      "titleColor": "#1F2937",
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "labelFont": "Inter, system-ui, sans-serif",
+      "titleFont": "Inter, system-ui, sans-serif",
+      "orient": "bottom-right",
+      "titleFontWeight": 500,
+      "gradientLength": 150,
+      "gradientThickness": 15,
+      "offset": 10
+    }
+  },
+  "projection": {
+    "type": "mercator",
+    "center": [133, -27],
+    "scale": 820
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/wanqi-xia/australia-security-map/refs/heads/main/au-states-with-names.json",
+        "format": {
+          "type": "topojson",
+          "feature": "austates"
+        }
+      },
+      "transform": [
+        {
+          "lookup": "properties.STATE_NAME",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/wanqi-xia/australia-security-map/refs/heads/main/fdv_offender_rate.csv"
+            },
+            "key": "State",
+            "fields": ["Rate"]
+          },
+          "default": null
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "stroke": "#ffffff",
+        "strokeWidth": 2.5
+      },
+      "encoding": {
+        "color": {
+          "condition": {
+            "test": "datum.Rate !== null && datum.Rate > 0",
+            "field": "Rate",
+            "type": "quantitative",
+            "scale": {
+              "type": "threshold",
+              "domain": [250, 400, 550, 1000],
+              "range": ["#DBEAFE", "#93C5FD", "#60A5FA", "#3B82F6", "#DC2626"]
+            },
+            "legend": {
+              "title": "FDV Offender Rate (per 100,000)",
+              "format": ","
+            }
+          },
+          "value": "#F3F4F6"
+        },
+        "tooltip": [
+          {
+            "field": "properties.STATE_NAME",
+            "type": "nominal",
+            "title": "State/Territory"
+          },
+          {
+            "field": "Rate",
+            "type": "quantitative",
+            "title": "Offender Rate",
+            "format": ","
+          }
+        ],
+        "opacity": {
+          "condition": {
+            "test": "datum.Rate !== null",
+            "value": 0.9
+          },
+          "value": 0.3
+        }
+      }
+    }
+  ]
+}

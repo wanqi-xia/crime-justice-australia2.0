@@ -1,0 +1,25 @@
+Age_Group,Gender,Rate
+18 years,Male,130.7
+18 years,Female,-8.2
+19 years,Male,254.0
+19 years,Female,-29.0
+20–24 years,Male,418.2
+20–24 years,Female,-39.9
+25–29 years,Male,621.4
+25–29 years,Female,-58.0
+30–34 years,Male,738.4
+30–34 years,Female,-62.0
+35–39 years,Male,695.6
+35–39 years,Female,-62.1
+40–44 years,Male,604.8
+40–44 years,Female,-53.4
+45–49 years,Male,462.0
+45–49 years,Female,-39.2
+50–54 years,Male,315.3
+50–54 years,Female,-23.6
+55–59 years,Male,209.5
+55–59 years,Female,-11.2
+60–64 years,Male,133.5
+60–64 years,Female,-7.6
+65 years and over,Male,67.4
+65 years and over,Female,-1.7
